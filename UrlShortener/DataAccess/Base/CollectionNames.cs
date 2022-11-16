@@ -1,4 +1,4 @@
-﻿namespace UrlShortener.DataAccess
+﻿namespace UrlShortener.DataAccess.Base
 {
     public static class CollectionNames
     {

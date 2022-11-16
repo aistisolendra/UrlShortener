@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using UrlShortener.Application;
 
-namespace UrlShortener.DataAccess
+namespace UrlShortener.DataAccess.Base
 {
     public class UnitOfWork : IUnitOfWork
     {

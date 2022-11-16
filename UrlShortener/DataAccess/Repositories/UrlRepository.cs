@@ -1,7 +1,8 @@
 ﻿using MongoDB.Driver;
-using UrlShortener.Models;
+using UrlShortener.DataAccess.Base;
+using UrlShortener.DataAccess.Entities;
 
-namespace UrlShortener.DataAccess
+namespace UrlShortener.DataAccess.Repositories
 {
     public class UrlRepository : BaseRepository<UrlEntity>, IUrlRepository
     {
@@ -12,22 +13,34 @@ namespace UrlShortener.DataAccess
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddAsync(UrlEntity urlEntity, CancellationToken cancellationToken)
+        public async Task<UrlEntity> AddAsync(UrlEntity urlEntity, CancellationToken cancellationToken)
         {
             await Collection.InsertOneAsync(urlEntity, cancellationToken: cancellationToken);
+
+            return urlEntity;
         }
 
-        public async Task UpdateAsync(string id, UrlEntity urlEntity, CancellationToken cancellationToken)
-        {
-            var filter = new FilterDefinitionBuilder<UrlEntity>().Eq(x => x.Id, urlEntity.Id);
-
-            var result = await Collection.ReplaceOneAsync(filter, urlEntity, cancellationToken: cancellationToken);
-        }
-
-        public async Task DeleteAsync(string id, CancellationToken cancellationToken)
+        public async Task<bool> UpdateAsync(string id, UrlEntity urlEntity, CancellationToken cancellationToken)
         {
             var filter = new FilterDefinitionBuilder<UrlEntity>().Eq(x => x.Id, id);
-            await Collection.DeleteOneAsync(filter, cancellationToken: cancellationToken);
+
+            var updateUrl = Builders<UrlEntity>.Update.Set(x => x.Url, urlEntity.Url);
+            var updateShortUrl = Builders<UrlEntity>.Update.Set(x => x.ShortUrl, urlEntity.ShortUrl);
+
+            var combinedUpdate = Builders<UrlEntity>.Update.Combine(updateUrl, updateShortUrl);
+
+            var result = await Collection.UpdateOneAsync(filter, combinedUpdate, cancellationToken: cancellationToken);
+
+            return result.IsAcknowledged && result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken)
+        {
+            var filter = new FilterDefinitionBuilder<UrlEntity>().Eq(x => x.Id, id);
+
+            var result = await Collection.DeleteOneAsync(filter, cancellationToken: cancellationToken);
+
+            return result.IsAcknowledged && result.DeletedCount > 0;
         }
 
         /* If Sharded Or has replica

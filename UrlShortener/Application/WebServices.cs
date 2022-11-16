@@ -1,4 +1,8 @@
-﻿using UrlShortener.DataAccess;
+﻿using System.Reflection;
+using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using UrlShortener.DataAccess.Base;
+using UrlShortener.DataAccess.Repositories;
 
 namespace UrlShortener.Application
 {
@@ -22,9 +26,23 @@ namespace UrlShortener.Application
             return app;
         }
 
+        public static WebApplicationBuilder ConfigureMediator(this WebApplicationBuilder app)
+        {
+            app.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies()); 
+            
+            return app;
+        }
+
+        public static WebApplicationBuilder ConfigureAutoMapper(this WebApplicationBuilder app)
+        {
+            app.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            return app;
+        }
+
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder app)
         {
-            app.Services.AddTransient<UrlRepository>();
+            app.Services.AddTransient<IUrlRepository, UrlRepository>();
             app.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return app;

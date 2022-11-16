@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
-using UrlShortener.Models;
+using UrlShortener.DataAccess.Entities;
 
-namespace UrlShortener.DataAccess
+namespace UrlShortener.DataAccess.Base
 {
     public abstract class BaseRepository<TEntity>
     {

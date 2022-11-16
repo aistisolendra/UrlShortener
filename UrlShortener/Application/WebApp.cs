@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using UrlShortener.DataAccess;
+using UrlShortener.DataAccess.Base;
 
 namespace UrlShortener.Application
 {
