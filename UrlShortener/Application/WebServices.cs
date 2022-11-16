@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using MediatR;
-using Microsoft.AspNetCore.Hosting;
+﻿using MediatR;
 using UrlShortener.DataAccess.Base;
 using UrlShortener.DataAccess.Repositories;
 

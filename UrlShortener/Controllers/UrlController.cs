@@ -1,8 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UrlShortener.DataAccess;
-using UrlShortener.DataAccess.Entities;
 using UrlShortener.Handlers.UrlHandlers.Add;
 using UrlShortener.Handlers.UrlHandlers.Delete;
 using UrlShortener.Handlers.UrlHandlers.Update;

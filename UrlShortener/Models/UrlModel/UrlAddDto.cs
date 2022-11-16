@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace UrlShortener.Models.UrlModel
+﻿namespace UrlShortener.Models.UrlModel
 {
     public class UrlAddDto
     {
