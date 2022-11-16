@@ -3,11 +3,9 @@
 public class UrlAddDto
 {
     public string Url { get; set; }
-    public string ShortUrl { get; set; }
 
-    public UrlAddDto(string url, string shortUrl)
+    public UrlAddDto(string url)
     {
         Url = url;
-        ShortUrl = shortUrl;
     }
 }

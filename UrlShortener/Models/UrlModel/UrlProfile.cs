@@ -30,9 +30,6 @@ public class UrlProfile : Profile
             .ForMember(
                 x => x.Url,
                 opt => opt.MapFrom(src => src.Url))
-            .ForMember(
-                x => x.ShortUrl,
-                opt => opt.MapFrom(src => src.ShortUrl))
             .AfterMap((_, dest) =>
             {
                 dest.Id = Guid.NewGuid().ToString();

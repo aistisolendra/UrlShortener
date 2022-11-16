@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using UrlShortener.DataAccess.Base;
 using UrlShortener.DataAccess.Repositories;
+using UrlShortener.Services;
 
 namespace UrlShortener.Application;
 
@@ -42,6 +43,7 @@ public static class WebServices
     {
         app.Services.AddTransient<IUrlRepository, UrlRepository>();
         app.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        app.Services.AddScoped<IShortStringGenService, ShortStringGenService>();
 
         return app;
     }
