@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using UrlShortener.DataAccess;
+using UrlShortener.Models;
 
 namespace UrlShortener.Controllers
 {
@@ -6,28 +8,23 @@ namespace UrlShortener.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+        private readonly UrlRepository _urlRepository;
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(UrlRepository urlRepository)
         {
-            _logger = logger;
+            _urlRepository = urlRepository;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet("/create")]
+        public async Task CreateTest()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            await _urlRepository.AddAsync(new UrlEntity("test", "test", DateTime.Today), CancellationToken.None);
+        }
+
+        [HttpGet("/delete")]
+        public async Task DeleteTest([FromQuery] string id)
+        {
+            await _urlRepository.DeleteAsync(id, CancellationToken.None);
         }
     }
 }
