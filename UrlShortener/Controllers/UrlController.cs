@@ -21,12 +21,14 @@ public class UrlController : ControllerBase
 
     [HttpPost("/add")]
     public async Task<ActionResult<UrlGetDto>> Add(
-        [Required] [FromBody] UrlAddDto urlAddDto
+        [Required] [FromBody] UrlAddDto urlAddDto,
+        [FromQuery] int? maxLength = null
     )
     {
         var request = new AddUrlRequest()
         {
-            UrlAddDto = urlAddDto
+            UrlAddDto = urlAddDto,
+            MaxLength = maxLength.GetValueOrDefault(10)
         };
 
         var result = await _mediator.Send(request);

@@ -15,7 +15,7 @@ namespace UrlShortener.Services
         public string GetShortString(int? maxLength = null)
         {
             var generatedString = Regex.Replace(Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[/+=]", "");
-
+            
             if (maxLength.HasValue)
                 generatedString = Truncate(generatedString, maxLength.Value);
 

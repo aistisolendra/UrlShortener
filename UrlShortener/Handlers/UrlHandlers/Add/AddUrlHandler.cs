@@ -23,7 +23,7 @@ public class AddUrlHandler : IRequestHandler<AddUrlRequest, UrlGetDto>
     public async Task<UrlGetDto> Handle(AddUrlRequest request, CancellationToken cancellationToken)
     {
         var mapped = _mapper.Map<UrlEntity>(request.UrlAddDto);
-        var shortUrl = _shortStringGen.GetShortUrl(8);
+        var shortUrl = _shortStringGen.GetShortUrl(request.MaxLength);
         mapped.ShortUrl = shortUrl;
 
         var result = await _urlRepository.AddAsync(mapped, cancellationToken);
