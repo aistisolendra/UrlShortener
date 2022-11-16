@@ -6,63 +6,62 @@ using UrlShortener.Handlers.UrlHandlers.Delete;
 using UrlShortener.Handlers.UrlHandlers.Update;
 using UrlShortener.Models.UrlModel;
 
-namespace UrlShortener.Controllers
+namespace UrlShortener.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class UrlController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class UrlController : ControllerBase
+    private readonly IMediator _mediator;
+
+    public UrlController(IMediator mediator)
     {
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+    }
 
-        public UrlController(IMediator mediator)
+    [HttpPost("/add")]
+    public async Task<ActionResult<UrlGetDto>> Add(
+        [Required] [FromBody] UrlAddDto urlAddDto
+    )
+    {
+        var request = new AddUrlRequest()
         {
-            _mediator = mediator;
-        }
+            UrlAddDto = urlAddDto
+        };
 
-        [HttpPost("/add")]
-        public async Task<ActionResult<UrlGetDto>> Add(
-            [Required] [FromBody] UrlAddDto urlAddDto
-        )
+        var result = await _mediator.Send(request);
+
+        return Ok(result);
+    }
+
+    [HttpPatch("/update")]
+    public async Task<ActionResult<bool>> Update(
+        [Required][FromQuery] string id,
+        [Required] [FromBody] UrlUpdateDto urlUpdateDto)
+    {
+        var request = new UpdateUrlRequest()
         {
-            var request = new AddUrlRequest()
-            {
-                UrlAddDto = urlAddDto
-            };
+            Id = id,
+            UrlUpdateDto = urlUpdateDto
+        };
 
-            var result = await _mediator.Send(request);
+        var result = await _mediator.Send(request);
 
-            return Ok(result);
-        }
+        return Ok(result);
+    }
 
-        [HttpPatch("/update")]
-        public async Task<ActionResult<bool>> Update(
-            [Required][FromQuery] string id,
-            [Required] [FromBody] UrlUpdateDto urlUpdateDto)
+    [HttpDelete("/delete")]
+    public async Task<IActionResult> Delete(
+        [Required] [FromQuery] string id
+    )
+    {
+        var request = new DeleteUrlRequest()
         {
-            var request = new UpdateUrlRequest()
-            {
-                Id = id,
-                UrlUpdateDto = urlUpdateDto
-            };
+            Id = id
+        };
 
-            var result = await _mediator.Send(request);
+        await _mediator.Send(request);
 
-            return Ok(result);
-        }
-
-        [HttpDelete("/delete")]
-        public async Task<IActionResult> Delete(
-            [Required] [FromQuery] string id
-        )
-        {
-            var request = new DeleteUrlRequest()
-            {
-                Id = id
-            };
-
-            await _mediator.Send(request);
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

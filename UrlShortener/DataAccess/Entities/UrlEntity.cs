@@ -1,13 +1,12 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace UrlShortener.DataAccess.Entities
+namespace UrlShortener.DataAccess.Entities;
+
+public class UrlEntity
 {
-    public class UrlEntity
-    {
-        [BsonId]
-        public string Id { get; set; }
-        public string Url { get; set; }
-        public string ShortUrl { get; set; }
-        public DateTime InsertDate { get; set; }
-    }
+    [BsonId]
+    public string Id { get; set; }
+    public string Url { get; set; }
+    public string ShortUrl { get; set; }
+    public DateTime InsertDate { get; set; }
 }

@@ -1,9 +1,8 @@
-﻿namespace UrlShortener.Application
+﻿namespace UrlShortener.Application;
+
+public class ApplicationSettings
 {
-    public class ApplicationSettings
-    {
-        public string ApplicationName { get; set; }
-        public string ConnectionString { get; set; }
-        public string DatabaseName { get; set; }
-    }
+    public string ApplicationName { get; set; }
+    public string ConnectionString { get; set; }
+    public string DatabaseName { get; set; }
 }

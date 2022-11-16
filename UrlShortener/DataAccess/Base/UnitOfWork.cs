@@ -1,48 +1,47 @@
 ﻿using MongoDB.Driver;
 using UrlShortener.Application;
 
-namespace UrlShortener.DataAccess.Base
+namespace UrlShortener.DataAccess.Base;
+
+public class UnitOfWork : IUnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork
+    private IMongoDatabase Database { get; set; }
+    public IClientSessionHandle Session { get; set; }
+    public MongoClient MongoClient { get; set; }
+    private readonly List<Func<Task>> _commands;
+
+    public UnitOfWork(ApplicationSettings applicationSettings)
     {
-        private IMongoDatabase Database { get; set; }
-        public IClientSessionHandle Session { get; set; }
-        public MongoClient MongoClient { get; set; }
-        private readonly List<Func<Task>> _commands;
+        MongoClient = new MongoClient(applicationSettings.ConnectionString);
+        Database = MongoClient.GetDatabase(applicationSettings.DatabaseName);
 
-        public UnitOfWork(ApplicationSettings applicationSettings)
+        _commands = new List<Func<Task>>();
+    }
+
+    // If sharded or has replica
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        using (Session = await MongoClient.StartSessionAsync(cancellationToken: cancellationToken))
         {
-            MongoClient = new MongoClient(applicationSettings.ConnectionString);
-            Database = MongoClient.GetDatabase(applicationSettings.DatabaseName);
+            Session.StartTransaction();
 
-            _commands = new List<Func<Task>>();
+            var commandTasks = _commands.Select(c => c());
+
+            await Task.WhenAll(commandTasks);
+
+            await Session.CommitTransactionAsync(cancellationToken);
         }
 
-        // If sharded or has replica
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            using (Session = await MongoClient.StartSessionAsync(cancellationToken: cancellationToken))
-            {
-                Session.StartTransaction();
+        return _commands.Count;
+    }
 
-                var commandTasks = _commands.Select(c => c());
+    public void AddCommand(Func<Task> func)
+    {
+        _commands.Add(func);
+    }
 
-                await Task.WhenAll(commandTasks);
-
-                await Session.CommitTransactionAsync(cancellationToken);
-            }
-
-            return _commands.Count;
-        }
-
-        public void AddCommand(Func<Task> func)
-        {
-            _commands.Add(func);
-        }
-
-        public IMongoCollection<T> GetCollection<T>(string name)
-        {
-            return Database.GetCollection<T>(name);
-        }
+    public IMongoCollection<T> GetCollection<T>(string name)
+    {
+        return Database.GetCollection<T>(name);
     }
 }

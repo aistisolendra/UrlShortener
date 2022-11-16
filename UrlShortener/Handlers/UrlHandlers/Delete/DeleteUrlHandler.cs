@@ -1,22 +1,21 @@
 ﻿using MediatR;
 using UrlShortener.DataAccess.Repositories;
 
-namespace UrlShortener.Handlers.UrlHandlers.Delete
+namespace UrlShortener.Handlers.UrlHandlers.Delete;
+
+public class DeleteUrlHandler : IRequestHandler<DeleteUrlRequest, bool>
 {
-    public class DeleteUrlHandler : IRequestHandler<DeleteUrlRequest, bool>
+    private readonly IUrlRepository _urlRepository;
+
+    public DeleteUrlHandler(IUrlRepository urlRepository)
     {
-        private readonly IUrlRepository _urlRepository;
+        _urlRepository = urlRepository;
+    }
 
-        public DeleteUrlHandler(IUrlRepository urlRepository)
-        {
-            _urlRepository = urlRepository;
-        }
+    public async Task<bool> Handle(DeleteUrlRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _urlRepository.DeleteAsync(request.Id, cancellationToken);
 
-        public async Task<bool> Handle(DeleteUrlRequest request, CancellationToken cancellationToken)
-        {
-            var result = await _urlRepository.DeleteAsync(request.Id, cancellationToken);
-
-            return result;
-        }
+        return result;
     }
 }

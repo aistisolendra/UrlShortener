@@ -1,7 +1,6 @@
-﻿namespace UrlShortener.DataAccess.Base
+﻿namespace UrlShortener.DataAccess.Base;
+
+public static class CollectionNames
 {
-    public static class CollectionNames
-    {
-        public static string UrlCollection = "Urls";
-    }
+    public static string UrlCollection = "Urls";
 }
