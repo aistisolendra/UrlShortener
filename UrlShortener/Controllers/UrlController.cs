@@ -21,16 +21,22 @@ public class UrlController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpGet("{pageIndex:int}/{pageSize:int}")]
     public async Task<ActionResult<List<UrlGetDto>>> GetAll(
-        [FromRoute] int? pageIndex = null,
-        [FromRoute] int? pageSize = null
+        [FromRoute] int pageIndex,
+        [FromRoute] int pageSize
     )
     {
+        if (pageIndex < 1)
+            throw new ValidationException($"pageIndex cannot be less than 1, but was {pageIndex}");
+
+        if (pageSize < 1)
+            throw new ValidationException($"pageSize cannot be less than 1, but was {pageSize}");
+
         var request = new GetAllUrlRequest()
         {
-            PageIndex = pageIndex.GetValueOrDefault(1),
-            PageSize = pageSize.GetValueOrDefault(10)
+            PageIndex = pageIndex,
+            PageSize = pageSize
         };
 
         var result = await _mediator.Send(request);
@@ -53,16 +59,19 @@ public class UrlController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost]
+    [HttpPost("{maxLength:int}")]
     public async Task<ActionResult<UrlGetDto>> Add(
         [Required] [FromBody] UrlAddDto urlAddDto,
-        [FromRoute] int? maxLength = null
+        [FromRoute] int maxLength
     )
     {
+        if (maxLength < 1)
+            throw new ValidationException($"maxLength cannot be less than 1, but was {maxLength}");
+
         var request = new AddUrlRequest()
         {
             UrlAddDto = urlAddDto,
-            MaxLength = maxLength.GetValueOrDefault(10)
+            MaxLength = maxLength
         };
 
         var result = await _mediator.Send(request);
@@ -70,9 +79,9 @@ public class UrlController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPatch]
+    [HttpPatch("{id:guid}")]
     public async Task<ActionResult<bool>> Update(
-        [Required][FromRoute] Guid id,
+        [Required] [FromRoute] Guid id,
         [Required] [FromBody] UrlUpdateDto urlUpdateDto)
     {
         var request = new UpdateUrlRequest()
@@ -86,7 +95,7 @@ public class UrlController : ControllerBase
         return Ok(result);
     }
 
-    [HttpDelete]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
         [Required] [FromRoute] Guid id
     )

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +7,6 @@ namespace UrlShortener.Middlewares
 {
     public class GlobalExceptionHandlingMiddleware : IMiddleware
     {
-
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -42,7 +42,14 @@ namespace UrlShortener.Middlewares
         {
             return exception switch
             {
-                ArgumentNullException e => e.ToProblemDetails()
+                ArgumentNullException e => e.ToProblemDetails(),
+                ValidationException e => e.ToProblemDetails(),
+                _ => new ProblemDetails()
+                {
+                    Status = 500,
+                    Title = "Unknown exception",
+                    Detail = "Unknown exception happened"
+                }
             };
         }
     }
