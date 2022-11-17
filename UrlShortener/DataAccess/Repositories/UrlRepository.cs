@@ -18,6 +18,10 @@ public sealed class UrlRepository : BaseRepository<UrlEntity>, IUrlRepository
         IRetryService retryService,
         IUnitOfWork unitOfWork) : base(unitOfWork)
     {
+        ArgumentNullException.ThrowIfNull(nameof(retrySettings));
+        ArgumentNullException.ThrowIfNull(nameof(retryService));
+        ArgumentNullException.ThrowIfNull(nameof(unitOfWork));
+
         _unitOfWork = unitOfWork;
         _retryService = retryService;
 

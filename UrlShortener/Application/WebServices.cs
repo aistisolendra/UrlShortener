@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using UrlShortener.DataAccess.Base;
 using UrlShortener.DataAccess.Repositories;
+using UrlShortener.Middlewares;
 using UrlShortener.Services.Retry;
 using UrlShortener.Services.ShortStringGen;
 
@@ -55,6 +56,13 @@ public static class WebServices
     {
         app.Services.AddScoped<IRetryService, RetryService>();
         app.Services.AddScoped<IShortStringGenService, ShortStringGenService>();
+
+        return app;
+    }
+
+    public static WebApplicationBuilder ConfigureMiddleware(this WebApplicationBuilder app)
+    {
+        app.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
         return app;
     }

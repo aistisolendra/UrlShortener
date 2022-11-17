@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using UrlShortener.Application;
 using UrlShortener.DataAccess.Repositories;
 using UrlShortener.Models.UrlModel;
 
@@ -11,6 +12,9 @@ namespace UrlShortener.Handlers.UrlHandlers.GetAll
         private readonly IMapper _mapper;
         public GetAllUrlHandler(IUrlRepository urlRepository, IMapper mapper)
         {
+            ArgumentNullException.ThrowIfNull(nameof(urlRepository));
+            ArgumentNullException.ThrowIfNull(nameof(mapper));
+
             _urlRepository = urlRepository;
             _mapper = mapper;
         }

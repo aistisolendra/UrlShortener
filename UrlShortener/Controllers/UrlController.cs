@@ -23,8 +23,8 @@ public class UrlController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<List<UrlGetDto>>> GetAll(
-        [FromQuery] int? pageIndex = null,
-        [FromQuery] int? pageSize = null
+        [FromRoute] int? pageIndex = null,
+        [FromRoute] int? pageSize = null
     )
     {
         var request = new GetAllUrlRequest()
@@ -40,12 +40,12 @@ public class UrlController : ControllerBase
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<UrlGetDto>> GetById(
-        [Required] [FromQuery] string id
+        [Required] [FromRoute] Guid id
     )
     {
         var request = new GetByIdRequest()
         {
-            Id = id
+            Id = id.ToString()
         };
 
         var result = await _mediator.Send(request);
@@ -56,7 +56,7 @@ public class UrlController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<UrlGetDto>> Add(
         [Required] [FromBody] UrlAddDto urlAddDto,
-        [FromQuery] int? maxLength = null
+        [FromRoute] int? maxLength = null
     )
     {
         var request = new AddUrlRequest()
@@ -72,12 +72,12 @@ public class UrlController : ControllerBase
 
     [HttpPatch]
     public async Task<ActionResult<bool>> Update(
-        [Required][FromQuery] string id,
+        [Required][FromRoute] Guid id,
         [Required] [FromBody] UrlUpdateDto urlUpdateDto)
     {
         var request = new UpdateUrlRequest()
         {
-            Id = id,
+            Id = id.ToString(),
             UrlUpdateDto = urlUpdateDto
         };
 
@@ -88,12 +88,12 @@ public class UrlController : ControllerBase
 
     [HttpDelete]
     public async Task<IActionResult> Delete(
-        [Required] [FromQuery] string id
+        [Required] [FromRoute] Guid id
     )
     {
         var request = new DeleteUrlRequest()
         {
-            Id = id
+            Id = id.ToString()
         };
 
         await _mediator.Send(request);

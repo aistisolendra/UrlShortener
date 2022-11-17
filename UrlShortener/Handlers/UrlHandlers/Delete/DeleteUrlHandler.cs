@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using UrlShortener.Application;
 using UrlShortener.DataAccess.Repositories;
 
 namespace UrlShortener.Handlers.UrlHandlers.Delete;
@@ -9,6 +10,8 @@ public sealed class DeleteUrlHandler : IRequestHandler<DeleteUrlRequest, bool>
 
     public DeleteUrlHandler(IUrlRepository urlRepository)
     {
+        ArgumentNullException.ThrowIfNull(nameof(urlRepository));
+
         _urlRepository = urlRepository;
     }
 

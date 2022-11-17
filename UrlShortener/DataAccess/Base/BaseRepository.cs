@@ -10,6 +10,8 @@ public abstract class BaseRepository<TEntity>
 
     protected BaseRepository(IUnitOfWork uow)
     {
+        ArgumentNullException.ThrowIfNull(nameof(uow));
+
         UnitOfWork = uow;
         Collection = uow.GetCollection<TEntity>(GetRepositoryNameFromType(typeof(TEntity)));
     }

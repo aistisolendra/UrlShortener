@@ -9,6 +9,8 @@ namespace UrlShortener.Services.ShortStringGen
 
         public ShortStringGenService(ApplicationSettings applicationSettings)
         {
+            ArgumentNullException.ThrowIfNull(nameof(applicationSettings));
+
             _applicationSettings = applicationSettings;
         }
 

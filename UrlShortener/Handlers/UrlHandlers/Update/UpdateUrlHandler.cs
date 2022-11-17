@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using UrlShortener.Application;
 using UrlShortener.DataAccess.Entities;
 using UrlShortener.DataAccess.Repositories;
 
@@ -11,6 +12,9 @@ public sealed class UpdateUrlHandler : IRequestHandler<UpdateUrlRequest, bool>
     private readonly IMapper _mapper;
     public UpdateUrlHandler(IUrlRepository urlRepository, IMapper mapper)
     {
+        ArgumentNullException.ThrowIfNull(nameof(urlRepository));
+        ArgumentNullException.ThrowIfNull(nameof(mapper));
+
         _urlRepository = urlRepository;
         _mapper = mapper;
     }

@@ -12,6 +12,8 @@ public sealed class UnitOfWork : IUnitOfWork
 
     public UnitOfWork(ApplicationSettings applicationSettings)
     {
+        ArgumentNullException.ThrowIfNull(nameof(applicationSettings));
+
         MongoClient = new MongoClient(applicationSettings.ConnectionString);
         Database = MongoClient.GetDatabase(applicationSettings.DatabaseName);
 

@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using UrlShortener.DataAccess.Base;
+using UrlShortener.Middlewares;
 
 namespace UrlShortener.Application;
 
@@ -35,6 +36,13 @@ public static class WebApp
         var database = client.GetDatabase(applicationSettings.DatabaseName);
 
         database.ConfigureCollections();
+
+        return app;
+    }
+
+    public static WebApplication ConfigureMiddleware(this WebApplication app)
+    {
+        app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
         return app;
     }

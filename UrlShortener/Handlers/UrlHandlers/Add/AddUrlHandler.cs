@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using UrlShortener.Application;
 using UrlShortener.DataAccess.Entities;
 using UrlShortener.DataAccess.Repositories;
 using UrlShortener.Models.UrlModel;
@@ -15,6 +16,10 @@ public sealed class AddUrlHandler : IRequestHandler<AddUrlRequest, UrlGetDto>
 
     public AddUrlHandler(IUrlRepository urlRepository, IMapper mapper, IShortStringGenService shortStringGen)
     {
+        ArgumentNullException.ThrowIfNull(nameof(urlRepository));
+        ArgumentNullException.ThrowIfNull(nameof(mapper));
+        ArgumentNullException.ThrowIfNull(nameof(shortStringGen));
+
         _urlRepository = urlRepository;
         _mapper = mapper;
         _shortStringGen = shortStringGen;

@@ -1,19 +1,28 @@
 using UrlShortener.Application;
 
-var builder = WebApplication.CreateBuilder(args);
+try
+{
+    var builder = WebApplication.CreateBuilder(args);
 
-builder
-    .ConfigureSettings()
-    .ConfigureBaseServices()
-    .ConfigureMediator()
-    .ConfigureAutoMapper()
-    .ConfigureRepositories()
-    .ConfigureServices();
+    builder
+        .ConfigureSettings()
+        .ConfigureBaseServices()
+        .ConfigureMiddleware()
+        .ConfigureMediator()
+        .ConfigureAutoMapper()
+        .ConfigureRepositories()
+        .ConfigureServices();
 
-var app = builder.Build();
+    var app = builder.Build();
 
-app
-    .ConfigureDevelopment()
-    .ConfigureBaseApplication()
-    .ConfigureMongoDb()
-    .Run();
+    app
+        .ConfigureDevelopment()
+        .ConfigureMiddleware()
+        .ConfigureBaseApplication()
+        .ConfigureMongoDb()
+        .Run();
+}
+catch (Exception exception)
+{
+    
+}
