@@ -1,21 +1,41 @@
 ﻿using MongoDB.Driver;
+using UrlShortener.Application;
 using UrlShortener.DataAccess.Base;
 using UrlShortener.DataAccess.Entities;
+using UrlShortener.Services.Retry;
 
 namespace UrlShortener.DataAccess.Repositories;
 
 public sealed class UrlRepository : BaseRepository<UrlEntity>, IUrlRepository
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly RetryOptions _retrySettings;
 
-    public UrlRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IRetryService _retryService;
+
+    public UrlRepository(
+        RetrySettings retrySettings,
+        IRetryService retryService,
+        IUnitOfWork unitOfWork) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
+        _retryService = retryService;
+
+        _retrySettings = new RetryOptions()
+        {
+            ExceptionsToCatch = RetryServiceExceptions.MongoDbExceptions(),
+            RetryCount = retrySettings.DatabaseRetrySettings.RetryCount,
+            RetryDelay = TimeSpan.FromSeconds(retrySettings.DatabaseRetrySettings.FirstTryDelayInSeconds),
+            RetryTimeout = TimeSpan.FromSeconds(retrySettings.DatabaseRetrySettings.TimeoutInSeconds)
+        };
     }
 
     public async Task<UrlEntity> AddAsync(UrlEntity urlEntity, CancellationToken cancellationToken)
     {
-        await Collection.InsertOneAsync(urlEntity, cancellationToken: cancellationToken);
+        await _retryService.RetryAsync(
+            () => Collection.InsertOneAsync(urlEntity, cancellationToken: cancellationToken),
+            _retrySettings
+        );
 
         return urlEntity;
     }
@@ -29,7 +49,10 @@ public sealed class UrlRepository : BaseRepository<UrlEntity>, IUrlRepository
 
         var combinedUpdate = Builders<UrlEntity>.Update.Combine(updateUrl, updateShortUrl);
 
-        var result = await Collection.UpdateOneAsync(filter, combinedUpdate, cancellationToken: cancellationToken);
+        var result = await _retryService.RetryAsync(
+            () => Collection.UpdateOneAsync(filter, combinedUpdate, cancellationToken: cancellationToken),
+            _retrySettings
+        );
 
         return result.IsAcknowledged && result.ModifiedCount > 0;
     }
@@ -38,28 +61,11 @@ public sealed class UrlRepository : BaseRepository<UrlEntity>, IUrlRepository
     {
         var filter = new FilterDefinitionBuilder<UrlEntity>().Eq(x => x.Id, id);
 
-        var result = await Collection.DeleteOneAsync(filter, cancellationToken: cancellationToken);
+        var result = await _retryService.RetryAsync(
+            () => Collection.DeleteOneAsync(filter, cancellationToken: cancellationToken),
+            _retrySettings
+        );
 
         return result.IsAcknowledged && result.DeletedCount > 0;
     }
-
-    /* If Sharded Or has replica
-    public async Task AddAsync(UrlEntity urlEntity, CancellationToken cancellationToken)
-    {
-        _unitOfWork.AddCommand(() => Collection.InsertOneAsync(urlEntity, cancellationToken: cancellationToken));
-
-        var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
-    }
-
-    public async Task DeleteAsync(string id, CancellationToken cancellationToken)
-    {
-        _unitOfWork.AddCommand(() =>
-        {
-            var filter = new FilterDefinitionBuilder<UrlEntity>().Eq(x => x.Id, id);
-
-            return Collection.DeleteOneAsync(filter, cancellationToken: cancellationToken);
-        });
-
-        var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
-    }*/
 }

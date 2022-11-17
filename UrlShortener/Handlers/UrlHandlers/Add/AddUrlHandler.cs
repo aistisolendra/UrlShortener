@@ -3,7 +3,7 @@ using MediatR;
 using UrlShortener.DataAccess.Entities;
 using UrlShortener.DataAccess.Repositories;
 using UrlShortener.Models.UrlModel;
-using UrlShortener.Services;
+using UrlShortener.Services.ShortStringGen;
 
 namespace UrlShortener.Handlers.UrlHandlers.Add;
 

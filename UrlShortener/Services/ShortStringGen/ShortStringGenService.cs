@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using UrlShortener.Application;
 
-namespace UrlShortener.Services
+namespace UrlShortener.Services.ShortStringGen
 {
     public class ShortStringGenService : IShortStringGenService
     {
@@ -15,7 +15,7 @@ namespace UrlShortener.Services
         public string GetShortString(int? maxLength = null)
         {
             var generatedString = Regex.Replace(Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[/+=]", "");
-            
+
             if (maxLength.HasValue)
                 generatedString = Truncate(generatedString, maxLength.Value);
 
@@ -35,8 +35,8 @@ namespace UrlShortener.Services
             if (string.IsNullOrEmpty(value))
                 return value;
 
-            return value.Length <= maxLength 
-                ? value 
+            return value.Length <= maxLength
+                ? value
                 : value[..maxLength];
         }
     }

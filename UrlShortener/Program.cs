@@ -7,6 +7,7 @@ builder
     .ConfigureBaseServices()
     .ConfigureMediator()
     .ConfigureAutoMapper()
+    .ConfigureRepositories()
     .ConfigureServices();
 
 var app = builder.Build();

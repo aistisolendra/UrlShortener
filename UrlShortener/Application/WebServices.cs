@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using UrlShortener.DataAccess.Base;
 using UrlShortener.DataAccess.Repositories;
-using UrlShortener.Services;
+using UrlShortener.Services.Retry;
+using UrlShortener.Services.ShortStringGen;
 
 namespace UrlShortener.Application;
 
@@ -11,6 +12,9 @@ public static class WebServices
     {
         var applicationSettings = app.Configuration.GetSection("ApplicationSettings").Get<ApplicationSettings>();
         app.Services.AddSingleton(applicationSettings);
+
+        var retrySettings = app.Configuration.GetSection("ApplicationRetrySettings").Get<RetrySettings>();
+        app.Services.AddSingleton(retrySettings);
 
         return app;
     }
@@ -39,10 +43,17 @@ public static class WebServices
         return app;
     }
 
+    public static WebApplicationBuilder ConfigureRepositories(this WebApplicationBuilder app)
+    {
+        app.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        app.Services.AddTransient<IUrlRepository, UrlRepository>();
+
+        return app;
+    }
+
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder app)
     {
-        app.Services.AddTransient<IUrlRepository, UrlRepository>();
-        app.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        app.Services.AddScoped<IRetryService, RetryService>();
         app.Services.AddScoped<IShortStringGenService, ShortStringGenService>();
 
         return app;

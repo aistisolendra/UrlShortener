@@ -1,4 +1,4 @@
-﻿namespace UrlShortener.Services
+﻿namespace UrlShortener.Services.ShortStringGen
 {
     public interface IShortStringGenService
     {
