@@ -2,5 +2,5 @@
 
 public record UrlAddDto
 {
-    public string Url { get; set; }
+    public string Url { get; set; } = null!;
 }

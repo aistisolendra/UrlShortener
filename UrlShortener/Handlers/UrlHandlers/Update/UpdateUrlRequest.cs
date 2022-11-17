@@ -5,6 +5,6 @@ namespace UrlShortener.Handlers.UrlHandlers.Update;
 
 public sealed record UpdateUrlRequest : IRequest<bool>
 {
-    public string Id { get; set; }
-    public UrlUpdateDto UrlUpdateDto { get; set; }
+    public string Id { get; set; } = null!;
+    public UrlUpdateDto UrlUpdateDto { get; set; } = null!;
 }

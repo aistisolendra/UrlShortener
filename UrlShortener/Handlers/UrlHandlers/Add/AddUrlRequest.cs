@@ -5,6 +5,6 @@ namespace UrlShortener.Handlers.UrlHandlers.Add;
 
 public sealed record AddUrlRequest : IRequest<UrlGetDto>
 {
-    public UrlAddDto UrlAddDto { get; set; }
+    public UrlAddDto UrlAddDto { get; set; } = null!;
     public int MaxLength { get; set; }
 }
