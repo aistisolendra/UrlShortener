@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using UrlShortener.Application;
 using UrlShortener.DataAccess.Repositories;
 using UrlShortener.Models.UrlModel;
 

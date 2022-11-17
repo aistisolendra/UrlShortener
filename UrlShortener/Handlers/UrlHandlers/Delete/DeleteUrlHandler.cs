@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using UrlShortener.Application;
 using UrlShortener.DataAccess.Repositories;
 
 namespace UrlShortener.Handlers.UrlHandlers.Delete;
