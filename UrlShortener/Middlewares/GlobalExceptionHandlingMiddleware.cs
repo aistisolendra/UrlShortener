@@ -31,9 +31,11 @@ namespace UrlShortener.Middlewares
             var problemDetails = GetDetailedException(exception);
             var serializedProblemDetails = JsonSerializer.Serialize(problemDetails);
 
-            await context.Response.WriteAsync(serializedProblemDetails);
-
             context.Response.ContentType = "application/json";
+            context.Response.StatusCode =
+                problemDetails.Status.GetValueOrDefault(StatusCodes.Status500InternalServerError);
+
+            await context.Response.WriteAsync(serializedProblemDetails, context.RequestAborted);
         }
 
         private ProblemDetails GetDetailedException(Exception exception)
