@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UrlShortener.Handlers.UrlHandlers.Add;
 using UrlShortener.Handlers.UrlHandlers.Delete;
+using UrlShortener.Handlers.UrlHandlers.GetAll;
+using UrlShortener.Handlers.UrlHandlers.GetById;
 using UrlShortener.Handlers.UrlHandlers.Update;
 using UrlShortener.Models.UrlModel;
 
@@ -19,7 +21,39 @@ public class UrlController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost("/add")]
+    [HttpGet]
+    public async Task<ActionResult<List<UrlGetDto>>> GetAll(
+        [FromQuery] int? pageIndex = null,
+        [FromQuery] int? pageSize = null
+    )
+    {
+        var request = new GetAllUrlRequest()
+        {
+            PageIndex = pageIndex.GetValueOrDefault(1),
+            PageSize = pageSize.GetValueOrDefault(10)
+        };
+
+        var result = await _mediator.Send(request);
+
+        return Ok(result.ToList());
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<UrlGetDto>> GetById(
+        [Required] [FromQuery] string id
+    )
+    {
+        var request = new GetByIdRequest()
+        {
+            Id = id
+        };
+
+        var result = await _mediator.Send(request);
+
+        return Ok(result);
+    }
+
+    [HttpPost]
     public async Task<ActionResult<UrlGetDto>> Add(
         [Required] [FromBody] UrlAddDto urlAddDto,
         [FromQuery] int? maxLength = null
@@ -36,7 +70,7 @@ public class UrlController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPatch("/update")]
+    [HttpPatch]
     public async Task<ActionResult<bool>> Update(
         [Required][FromQuery] string id,
         [Required] [FromBody] UrlUpdateDto urlUpdateDto)
@@ -52,7 +86,7 @@ public class UrlController : ControllerBase
         return Ok(result);
     }
 
-    [HttpDelete("/delete")]
+    [HttpDelete]
     public async Task<IActionResult> Delete(
         [Required] [FromQuery] string id
     )

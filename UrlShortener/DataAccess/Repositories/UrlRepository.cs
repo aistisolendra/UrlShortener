@@ -30,6 +30,33 @@ public sealed class UrlRepository : BaseRepository<UrlEntity>, IUrlRepository
         };
     }
 
+    public async Task<IList<UrlEntity>> GetAll(int pageIndex, int pageSize, CancellationToken cancellationToken)
+    {
+        var result = await _retryService.RetryAsync(
+            () => Collection
+                .Aggregate()
+                .Skip(pageIndex * pageSize)
+                .Limit(pageSize)
+                .ToListAsync(cancellationToken),
+            _retrySettings
+        );
+
+        return result;
+    }
+    public async Task<UrlEntity> GetById(string id, CancellationToken cancellationToken)
+    {
+        var filter = new FilterDefinitionBuilder<UrlEntity>().Eq(x => x.Id, id);
+
+        var result = await _retryService.RetryAsync(
+            () => Collection
+                .Find(filter)
+                .FirstOrDefaultAsync(cancellationToken),
+            _retrySettings
+        );
+
+        return result;
+    }
+
     public async Task<UrlEntity> AddAsync(UrlEntity urlEntity, CancellationToken cancellationToken)
     {
         await _retryService.RetryAsync(
