@@ -24,12 +24,28 @@ public class UrlProfile : Profile
             .ForMember(
                 x => x.ShortUrl,
                 opt => opt.MapFrom(src => src.ShortUrl))
+            .ForMember(
+                x => x.InsertDate,
+                opt => opt.Ignore())
+            .ForMember(
+                x => x.Id,
+                opt => opt.Ignore()
+                )
             .IgnoreAllPropertiesWithAnInaccessibleSetter();
 
         CreateMap<UrlAddDto, UrlEntity>()
             .ForMember(
                 x => x.Url,
                 opt => opt.MapFrom(src => src.Url))
+            .ForMember(
+                x => x.Id,
+                opt => opt.Ignore())
+            .ForMember(
+                x => x.ShortUrl,
+                opt => opt.Ignore())
+            .ForMember(
+                x => x.InsertDate,
+                opt => opt.Ignore())
             .AfterMap((_, dest) =>
             {
                 dest.Id = Guid.NewGuid().ToString();
