@@ -7,7 +7,7 @@ using UrlShortener.Services;
 
 namespace UrlShortener.Handlers.UrlHandlers.Add;
 
-public class AddUrlHandler : IRequestHandler<AddUrlRequest, UrlGetDto>
+public sealed class AddUrlHandler : IRequestHandler<AddUrlRequest, UrlGetDto>
 {
     private readonly IUrlRepository _urlRepository;
     private readonly IMapper _mapper;

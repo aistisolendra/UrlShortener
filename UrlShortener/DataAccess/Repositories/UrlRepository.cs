@@ -4,7 +4,7 @@ using UrlShortener.DataAccess.Entities;
 
 namespace UrlShortener.DataAccess.Repositories;
 
-public class UrlRepository : BaseRepository<UrlEntity>, IUrlRepository
+public sealed class UrlRepository : BaseRepository<UrlEntity>, IUrlRepository
 {
     private readonly IUnitOfWork _unitOfWork;
 

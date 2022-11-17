@@ -1,11 +1,6 @@
 ﻿namespace UrlShortener.Models.UrlModel;
 
-public class UrlAddDto
+public record UrlAddDto
 {
     public string Url { get; set; }
-
-    public UrlAddDto(string url)
-    {
-        Url = url;
-    }
 }

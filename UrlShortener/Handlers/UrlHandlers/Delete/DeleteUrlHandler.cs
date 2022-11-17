@@ -3,7 +3,7 @@ using UrlShortener.DataAccess.Repositories;
 
 namespace UrlShortener.Handlers.UrlHandlers.Delete;
 
-public class DeleteUrlHandler : IRequestHandler<DeleteUrlRequest, bool>
+public sealed class DeleteUrlHandler : IRequestHandler<DeleteUrlRequest, bool>
 {
     private readonly IUrlRepository _urlRepository;
 

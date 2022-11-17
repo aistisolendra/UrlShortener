@@ -3,7 +3,7 @@ using UrlShortener.Application;
 
 namespace UrlShortener.DataAccess.Base;
 
-public class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork : IUnitOfWork
 {
     private IMongoDatabase Database { get; set; }
     public IClientSessionHandle Session { get; set; }

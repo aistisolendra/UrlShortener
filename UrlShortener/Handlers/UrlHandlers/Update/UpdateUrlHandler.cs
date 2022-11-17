@@ -5,7 +5,7 @@ using UrlShortener.DataAccess.Repositories;
 
 namespace UrlShortener.Handlers.UrlHandlers.Update;
 
-public class UpdateUrlHandler : IRequestHandler<UpdateUrlRequest, bool>
+public sealed class UpdateUrlHandler : IRequestHandler<UpdateUrlRequest, bool>
 {
     private readonly IUrlRepository _urlRepository;
     private readonly IMapper _mapper;
