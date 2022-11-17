@@ -18,11 +18,11 @@ try
     var app = builder.Build();
 
     app
-        .ConfigureDevelopment()
-        .ConfigureSerilog()
-        .ConfigureMiddleware()
-        .ConfigureBaseApplication()
-        .ConfigureMongoDb()
+        .UseDevelopment()
+        .UseSerilog()
+        .UseMiddleware()
+        .UseBaseApplication()
+        .SetupMongoDb()
         .Run();
 }
 catch (Exception exception)

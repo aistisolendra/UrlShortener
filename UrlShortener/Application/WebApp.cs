@@ -8,7 +8,7 @@ namespace UrlShortener.Application;
 
 public static class WebApp
 {
-    public static WebApplication ConfigureBaseApplication(this WebApplication app)
+    public static WebApplication UseBaseApplication(this WebApplication app)
     {
         app.UseHttpsRedirection();
         app.UseAuthorization();
@@ -17,7 +17,7 @@ public static class WebApp
         return app;
     }
 
-    public static WebApplication ConfigureDevelopment(this WebApplication app)
+    public static WebApplication UseDevelopment(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {
@@ -28,7 +28,7 @@ public static class WebApp
         return app;
     }
 
-    public static WebApplication ConfigureMongoDb(this WebApplication app)
+    public static WebApplication SetupMongoDb(this WebApplication app)
     {
         var applicationSettings = app.ResolveSettings();
 
@@ -41,14 +41,14 @@ public static class WebApp
         return app;
     }
 
-    public static WebApplication ConfigureMiddleware(this WebApplication app)
+    public static WebApplication UseMiddleware(this WebApplication app)
     {
         app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
         return app;
     }
 
-    public static WebApplication ConfigureSerilog(this WebApplication app)
+    public static WebApplication UseSerilog(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
 
