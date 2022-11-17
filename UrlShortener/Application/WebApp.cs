@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using Serilog;
 using UrlShortener.DataAccess.Base;
 using UrlShortener.Middlewares;
 
@@ -43,6 +44,13 @@ public static class WebApp
     public static WebApplication ConfigureMiddleware(this WebApplication app)
     {
         app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+
+        return app;
+    }
+
+    public static WebApplication ConfigureSerilog(this WebApplication app)
+    {
+        app.UseSerilogRequestLogging();
 
         return app;
     }

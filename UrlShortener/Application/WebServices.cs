@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Serilog;
 using UrlShortener.DataAccess.Base;
 using UrlShortener.DataAccess.Repositories;
 using UrlShortener.Middlewares;
@@ -63,6 +64,21 @@ public static class WebServices
     public static WebApplicationBuilder ConfigureMiddleware(this WebApplicationBuilder app)
     {
         app.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+
+        return app;
+    }
+
+    public static WebApplicationBuilder ConfigureSerilog(this WebApplicationBuilder app)
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+
+        app.Host.UseSerilog();
 
         return app;
     }

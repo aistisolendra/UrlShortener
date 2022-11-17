@@ -24,5 +24,15 @@ namespace UrlShortener.Middlewares
                 Detail = exception.Message
             };
         }
+
+        public static ProblemDetails ToProblemDetails(this InvalidOperationException exception)
+        {
+            return new ProblemDetails()
+            {
+                Status = 500,
+                Title = exception.GetType().Name,
+                Detail = exception.Message
+            };
+        }
     }
 }

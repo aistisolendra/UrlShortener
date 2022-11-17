@@ -2,11 +2,16 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace UrlShortener.Middlewares
 {
     public class GlobalExceptionHandlingMiddleware : IMiddleware
     {
+        public GlobalExceptionHandlingMiddleware()
+        {
+        }
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -15,6 +20,7 @@ namespace UrlShortener.Middlewares
             }
             catch (Exception e)
             {
+                Log.Logger.Error("Exception caught: { Exception }", e.Message);
                 await HandleError(e, context);
             }
         }
@@ -43,6 +49,7 @@ namespace UrlShortener.Middlewares
             return exception switch
             {
                 ArgumentNullException e => e.ToProblemDetails(),
+                InvalidOperationException e => e.ToProblemDetails(),
                 ValidationException e => e.ToProblemDetails(),
                 _ => new ProblemDetails()
                 {

@@ -1,3 +1,4 @@
+using Serilog;
 using UrlShortener.Application;
 
 try
@@ -7,6 +8,7 @@ try
     builder
         .ConfigureSettings()
         .ConfigureBaseServices()
+        .ConfigureSerilog()
         .ConfigureMiddleware()
         .ConfigureMediator()
         .ConfigureAutoMapper()
@@ -17,6 +19,7 @@ try
 
     app
         .ConfigureDevelopment()
+        .ConfigureSerilog()
         .ConfigureMiddleware()
         .ConfigureBaseApplication()
         .ConfigureMongoDb()
@@ -24,5 +27,5 @@ try
 }
 catch (Exception exception)
 {
-    
+    Log.Logger.Fatal("Application failed to start with an exception {Exception}", exception.Message);
 }
