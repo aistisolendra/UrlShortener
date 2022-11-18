@@ -47,9 +47,9 @@ namespace UrlShortener.Middlewares
         {
             return exception switch
             {
-                ArgumentNullException e => e.ToProblemDetails(),
-                InvalidOperationException e => e.ToProblemDetails(),
-                ValidationException e => e.ToProblemDetails(),
+                ArgumentNullException e => e.CreateProblemDetails(500),
+                InvalidOperationException e => e.CreateProblemDetails(500),
+                ValidationException e => e.CreateProblemDetails(400),
                 _ => new ProblemDetails()
                 {
                     Status = 500,
