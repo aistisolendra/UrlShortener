@@ -12,10 +12,10 @@ public static class WebServices
 {
     public static WebApplicationBuilder ConfigureSettings(this WebApplicationBuilder app)
     {
-        var applicationSettings = app.Configuration.GetSection("ApplicationSettings").Get<ApplicationSettings>();
+        var applicationSettings = app.Configuration.GetSection(Constants.ApplicationSettings).Get<ApplicationSettings>();
         app.Services.AddSingleton(applicationSettings);
 
-        var retrySettings = app.Configuration.GetSection("ApplicationRetrySettings").Get<RetrySettings>();
+        var retrySettings = app.Configuration.GetSection(Constants.ApplicationRetrySettings).Get<RetrySettings>();
         app.Services.AddSingleton(retrySettings);
 
         return app;
