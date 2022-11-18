@@ -19,7 +19,7 @@ namespace UrlShortener.Middlewares
             }
             catch (Exception e)
             {
-                Log.Logger.Error("Exception caught: { Exception }", e.Message);
+                Log.Logger.Error("Exception caught: {Exception}", e.Message);
                 await HandleError(e, context);
             }
         }
