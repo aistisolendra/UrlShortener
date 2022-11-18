@@ -2,7 +2,7 @@
 {
     public record RetrySettings
     {
-        public DatabaseRetrySettings DatabaseRetrySettings { get; set; } = null!;
+        public DatabaseRetrySettings DatabaseRetrySettings { get; set; }
     }
 
     public record DatabaseRetrySettings

@@ -6,7 +6,7 @@ namespace UrlShortener.DataAccess.Base;
 public sealed class UnitOfWork : IUnitOfWork
 {
     private IMongoDatabase Database { get; set; }
-    public IClientSessionHandle Session { get; set; } = null!;
+    public IClientSessionHandle Session { get; set; }
     public MongoClient MongoClient { get; set; }
     private readonly List<Func<Task>> _commands;
 

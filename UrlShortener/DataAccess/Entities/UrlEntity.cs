@@ -4,8 +4,8 @@ namespace UrlShortener.DataAccess.Entities;
 
 public class UrlEntity
 {
-    [BsonId] public string Id { get; set; } = null!;
-    public string Url { get; set; } = null!;
-    public string ShortUrl { get; set; } = null!;
+    [BsonId] public string Id { get; set; }
+    public string Url { get; set; } 
+    public string ShortUrl { get; set; }
     public DateTime InsertDate { get; set; }
 }
