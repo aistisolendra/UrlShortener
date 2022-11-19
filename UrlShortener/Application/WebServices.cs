@@ -68,6 +68,18 @@ public static class WebServices
         return app;
     }
 
+    public static WebApplicationBuilder ConfigureHealthChecks(this WebApplicationBuilder app)
+    {
+        using var scope = app.Services.BuildServiceProvider().CreateScope();
+        var applicationSettings = scope.ServiceProvider.GetRequiredService<ApplicationSettings>();
+
+        app.Services
+            .AddHealthChecks()
+            .AddMongoDb(applicationSettings.ConnectionString);
+
+        return app;
+    }
+
     public static WebApplicationBuilder ConfigureSerilog(this WebApplicationBuilder app)
     {
         var configuration = new ConfigurationBuilder()

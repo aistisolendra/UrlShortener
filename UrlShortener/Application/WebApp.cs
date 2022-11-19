@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Serilog;
 using UrlShortener.DataAccess.Base;
@@ -24,6 +26,22 @@ public static class WebApp
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        return app;
+    }
+
+    public static WebApplication UseHealthChecks(this WebApplication app)
+    {
+        app.MapHealthChecks("/status", new HealthCheckOptions
+        {
+            ResultStatusCodes =
+            {
+                [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                [HealthStatus.Degraded] = StatusCodes.Status200OK,
+                [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+            },
+            AllowCachingResponses = false
+        });
 
         return app;
     }

@@ -10,6 +10,7 @@ try
         .ConfigureBaseServices()
         .ConfigureSerilog()
         .ConfigureMiddleware()
+        .ConfigureHealthChecks()
         .ConfigureMediator()
         .ConfigureAutoMapper()
         .ConfigureRepositories()
@@ -20,6 +21,7 @@ try
     app
         .UseDevelopment()
         .UseSerilog()
+        .UseHealthChecks()
         .UseMiddleware()
         .UseBaseApplication()
         .SetupMongoDb()
