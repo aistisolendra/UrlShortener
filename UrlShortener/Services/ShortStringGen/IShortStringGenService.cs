@@ -2,7 +2,7 @@
 {
     public interface IShortStringGenService
     {
-        string GetShortString(int? maxLength = null);
-        string GetShortUrl(int? maxLength = null);
+        string GetShortString(int maxLength);
+        string GetShortUrl(int maxLength);
     }
 }

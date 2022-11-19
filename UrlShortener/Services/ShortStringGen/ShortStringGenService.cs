@@ -14,18 +14,29 @@ namespace UrlShortener.Services.ShortStringGen
             _applicationSettings = applicationSettings;
         }
 
-        public string GetShortString(int? maxLength = null)
+        public string GetShortString(int maxLength)
         {
+            if (maxLength <= 0)
+                maxLength = 1;
+
+            if(maxLength > 20)
+                maxLength = 20;
+
             var generatedString = Regex.Replace(Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[/+=]", "");
 
-            if (maxLength.HasValue)
-                generatedString = Truncate(generatedString, maxLength.Value);
+            generatedString = Truncate(generatedString, maxLength);
 
             return generatedString;
         }
 
-        public string GetShortUrl(int? maxLength = null)
+        public string GetShortUrl(int maxLength)
         {
+            if (maxLength <= 0)
+                maxLength = 1;
+
+            if (maxLength > 20)
+                maxLength = 20;
+
             var shortString = GetShortString(maxLength);
             var fullUrl = $"http://{_applicationSettings.Domain}/{shortString}";
 
